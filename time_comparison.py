@@ -7,6 +7,6 @@ def calculate_time(func):
         result = func(*args, **kwargs)
         stop = datetime.now()
         time_response = (stop - start)
-        print('Заняло времени:', time_response)
+        print(f'Заняло времени y {func.__name__}:', time_response)
         return result
     return inner

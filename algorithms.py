@@ -1,15 +1,18 @@
 from formating.formating_date import date_formation
 from datetime import datetime
 
+from time_comparison import calculate_time
 
-def rewrite_search(df):
-    """Поиск места разрыва (перезаписи) в файле: где стоят рядом самое большое значение и самое маленькое"""
+
+@calculate_time
+def rewrite_search(df) -> dict:
+    """Поиск места разрыва (перезаписи) в файле: где стоят рядом самое большое значение и самое маленькое
+       return: Словарь, с двумя индексами, между которых находится или остутствует разрыв 
+    """
     min_index = 0
     max_index = len(df)-1
-
     while True:
         mid_index = (min_index + max_index) // 2
-
         # Точка выхода
         if max_index == min_index + 1:
             return {'min_index': min_index, 'max_index': max_index}
@@ -20,8 +23,11 @@ def rewrite_search(df):
             max_index = mid_index
 
 
-def searching_index(date: datetime, df):
-    """Поиск индекса в отсортированном массиве, перед которым находится элемент date"""
+@calculate_time
+def searching_index(date: datetime, df) -> int | None:
+    """Поиск индекса в отсортированном массиве, перед которым находится элемент date
+       return: int, если индекс существует, None, если его нет 
+    """
     if date <= date_formation(df.loc[0]['Дата и время записи']):
         return 0
     elif date > date_formation(df.iloc[-1]['Дата и время записи']):
