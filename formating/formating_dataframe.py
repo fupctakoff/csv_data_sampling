@@ -1,8 +1,6 @@
 import pandas as pd
 
-from time_comparison import calculate_time
 
-
-@calculate_time
-def dataframe_formation(index, df):
+def dataframe_formation(index: int, df: pd.DataFrame) -> pd.DataFrame:
+    """Отрезает датафрейм по индексу, и вставляет конец в начало"""
     return pd.concat([df[index:], df[:index]], ignore_index=True)

@@ -2,6 +2,5 @@ __pycache__/
 **/__pycache__/
 .idea/
 .vscode/
-csv_data/
 venv/
 test.py

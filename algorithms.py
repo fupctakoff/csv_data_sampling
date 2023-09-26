@@ -1,11 +1,11 @@
+import pandas as pd
 from formating.formating_date import date_formation
 from datetime import datetime
-
 from time_comparison import calculate_time
 
 
 @calculate_time
-def rewrite_search(df) -> dict:
+def rewrite_search(df: pd.DataFrame) -> dict:
     """Поиск места разрыва (перезаписи) в файле: где стоят рядом самое большое значение и самое маленькое
        return: Словарь, с двумя индексами, между которых находится или остутствует разрыв 
     """

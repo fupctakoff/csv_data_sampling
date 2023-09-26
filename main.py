@@ -9,28 +9,21 @@ from time_comparison import calculate_time
 
 PARENT_DIR = Path(__file__).resolve().parent
 
-# data_path = os.path.join(PARENT_DIR, 'csv_data/data.csv')
-data_path = os.path.join(PARENT_DIR, 'csv_data/УжатыйЦСВ.csv')
-# data_path = os.path.join(PARENT_DIR, 'csv_data/new.csv')
-# data_path = os.path.join(PARENT_DIR, 'csv_data/new_copy.csv')
+# Путь до исходного файла с данными .csv
+data_path = os.path.join(PARENT_DIR, 'csv_data/data.csv')
 
-df = pd.read_csv(filepath_or_buffer=data_path,
-                 encoding='windows-1251')
+# Чтение файла
+df = pd.read_csv(filepath_or_buffer=data_path, encoding='windows-1251')
 
-
-# берет столбцы индекс и время из таблицы для всех строк
-# df_data_to_find_start = df.loc[:, ['RecordID', 'Дата и время записи']]
-# df_data = df.loc[:, ['RecordID', 'Дата и время записи']]
-
-
-date_from = '18 августа 2022 г. 7:58:30.003 мсек'
-date_to = '18 августа 2022 г. 9:21:50.028 мсек'
+# Дефолтные значения даты и времени для выборки
+date_from = '18 августа 2022 г. 0:50:30.003 мсек'
+date_to = '18 августа 2022 г. 8:21:50.028 мсек'
 # date_to = '18 августа 2022 г. 7:58:41.028 мсек'
 
 
 @calculate_time
-def getting_range(date_from, date_to):
-
+def getting_range(date_from=date_from, date_to=date_to) -> pd.DataFrame:
+    """Выборка всего временного промежутка, начиная с date_from, заканчивая date_to в датафрейме"""
     formated_date_from = date_formation(date_from)
     formated_date_to = date_formation(date_to)
     indexex_of_break = rewrite_search(df)
@@ -55,10 +48,11 @@ def getting_range(date_from, date_to):
     return response
 
 
-# это работает быстрее
 @calculate_time
 def writing_to_csv_by_aperture(df: pd.DataFrame, aperture) -> bool:
-    """Запись строк в файл response.csv, у которых значение параметра отличается от предыдущей строки на значение, большее апертуры"""
+    """Запись строк в файл response.csv, у которых значение параметра отличается от предыдущей строки на значение, большее апертуры
+       Значения записываются в файл csv_data/response.csv
+    """
     with open('csv_data/response.csv', 'w') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
         writer.writerow(df.columns[1:])
@@ -70,35 +64,13 @@ def writing_to_csv_by_aperture(df: pd.DataFrame, aperture) -> bool:
     return True
 
 
-# это работает
-# @calculate_time
-# def writing_to_csv_by_aperture(df: pd.DataFrame, aperture) -> bool:
-#     """Запись строк в файл response.csv, у которых значение параметра отличается от предыдущей строки на значение, большее апертуры"""
-#     with open('csv_data/response.csv', 'w') as csvfile:
-#         writer = csv.writer(csvfile, delimiter=',')
-#         writer.writerow(df.columns[1:])
-#         for i in range(0, len(df)-1):
-#             previous = df.iloc[i]
-#             next = df.iloc[i+1]
-#             if abs(next[aperture['parametr']] - previous[aperture['parametr']]) > aperture['value']:
-#                 writer.writerow(next[1:])
-#     return True
-
-
-# это работает быстрее
 @calculate_time
-def main(date_from, date_to, aperture: dict = {'parametr': 'п2673', 'value': 10}):
+def main(date_from=date_from, date_to=date_to, aperture: dict = {'parametr': 'п2673', 'value': 10}):
+    """Основная исполняемая функция, объединяет функцию выборки на основе вводимых дат, функцию выборки на основе вводимого параметра и записи в .csv"""
     sorted_dataframe = pd.concat(
         [getting_range(date_from, date_to)], ignore_index=True)
     writing_to_csv_by_aperture(sorted_dataframe, aperture)
     return 'Done'
 
-# это работает
-# @calculate_time
-# def main(date_from, date_to, aperture: dict = {'parametr': 'п2673', 'value': 10}):
-#     sorted_dataframe = getting_range(date_from, date_to).reset_index()
-#     writing_to_csv_by_aperture(sorted_dataframe, aperture)
-#     return 'Done'
 
-
-print(main(date_from, date_to))
+print(main())

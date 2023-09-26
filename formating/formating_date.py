@@ -1,7 +1,5 @@
 from datetime import datetime
 
-from time_comparison import calculate_time
-
 DATA_FOR_MONTHS = {
     'января': 1,
     'февраля': 2,
@@ -18,7 +16,6 @@ DATA_FOR_MONTHS = {
 }
 
 
-@calculate_time
 def date_formation(elem) -> datetime:
     """Форматирование элементов в формат datetime для удобного сравнения"""
     elems_ymd = elem[:-20].split(' ')  # день месяц год
